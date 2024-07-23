@@ -5,7 +5,14 @@ import InputLabel from "../../Components/Forms/InputLabel";
 import { useNavigate  } from "react-router-dom";
 import axios from '../../api/axios';
 
+import { useDispatch } from "react-redux";
+import { login } from '../../redux/user/userAction'
+
+
+
 export default function Login() {
+
+    const dispatch = useDispatch()
 
     let navigate = useNavigate();
 
@@ -19,25 +26,27 @@ export default function Login() {
         const user = {
             username: email,
             password: password,
+
         };
 
-        axios.post(`login`, JSON.stringify(user), {
-            headers: {
-                'Content-type': 'application/json',
+        dispatch(login(user))
 
-            },
-            credentials: true
-        })
-            .then(res => {
-                if (res.data.token) {
+        // axios.post(`login`, JSON.stringify(user), {
+        //     headers: {
+        //         'Content-type': 'application/json',
 
-                    console.log("eeeeee", res.data.token)
-                    // return navigate("/product")
-                }
+        //     },
+        //     credentials: true
+        // }).then(res => {
+        //         if (res.data.token) {
+
+        //             console.log("eeeeee", res.data.token)
+        //             // return navigate("/product")
+        //         }
                 
-            }).catch(error => {
-                console.log("eeeeeeeeeeeeeee", error);
-            })
+        // }).catch(error => {
+        //         console.log("eeeeeeeeeeeeeee", error);
+        // })
 
     }
 

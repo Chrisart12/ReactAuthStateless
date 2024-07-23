@@ -14,6 +14,8 @@ import TheUseRef from './Pages/TheHooks/TheUseRef.jsx'
 
 import Login from './Pages/Auth/Login.jsx'
 import Register from './Pages/Auth/Register.jsx'
+import { Provider } from "react-redux";
+import {store} from './redux'
 
 
 
@@ -58,6 +60,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>,
 )
