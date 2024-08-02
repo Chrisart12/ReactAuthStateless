@@ -3,14 +3,17 @@ import { useState, useEffect } from "react";
 import Input from "../../Components/Forms/Input";
 import InputLabel from "../../Components/Forms/InputLabel";
 import { useNavigate  } from "react-router-dom";
-import axios from '../../api/axios';
-
 import { useDispatch } from "react-redux";
-import { login } from '../../redux/user/userAction'
+import { userInfo } from '../../redux/user/userAction'
+import axiosBaseURL from '../../api/axios';
+
+// import axios from 'axios';
 
 
 
 export default function Login() {
+
+   
 
     const dispatch = useDispatch()
 
@@ -24,29 +27,39 @@ export default function Login() {
         event.preventDefault();
 
         const user = {
-            username: email,
+            // username: email, email et non username dans Laravel
+            email: email,
             password: password,
 
         };
 
-        dispatch(login(user))
+       
+        // JSON.stringify(user)
+        axiosBaseURL.post(`login`, JSON.stringify(user), {
+            headers: {
+                'Content-type': 'application/json',
+            },
+            // Permet de recevoir les cookies envoyé par le serveur
+            withCredentials: true,
+            
+        }).then(res => {
+                // Si l'authentification a réussi on fait appel à la fonction dispatch getUser
+                if (res.data) {
 
-        // axios.post(`login`, JSON.stringify(user), {
-        //     headers: {
-        //         'Content-type': 'application/json',
+                    navigate('/')
 
-        //     },
-        //     credentials: true
-        // }).then(res => {
-        //         if (res.data.token) {
-
-        //             console.log("eeeeee", res.data.token)
-        //             // return navigate("/product")
-        //         }
+                    // dispatch(userInfo()).then((result) => {
+                    //     console.log("result", result)
+                    //     if (result.payload) {
+                    //         console.log('eeeeeee')
+                    //         navigate('/')
+                    //     }
+                    // })
+                }
                 
-        // }).catch(error => {
-        //         console.log("eeeeeeeeeeeeeee", error);
-        // })
+        }).catch(error => { 
+                console.log("eeeeeeeeeeeeeee", error);
+        })
 
     }
 

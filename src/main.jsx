@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import ProductIndex from './Pages/Product/Index.jsx'
+import ProductCreate from './Pages/Product/Create.jsx'
 import EditTitle from './Pages/Title/EditTitle.jsx'
 import Timer from './Pages/Timer/Timer.jsx'
 import NotFoundPage from './Pages/NotFoundPage.jsx'
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: '/product',
     element: <ProductIndex />,
+  },
+  {
+    path: '/product/create',
+    element: <ProductCreate />,
   },
   {
     path: '/edittitle',

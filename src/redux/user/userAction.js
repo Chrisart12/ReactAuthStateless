@@ -1,3 +1,4 @@
-import {userSlice} from './userSlice'
+import { getUser } from './userSlice'
 
-export const { login } = userSlice.actions;
+
+export const userInfo = getUser;

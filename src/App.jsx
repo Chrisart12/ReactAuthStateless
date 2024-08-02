@@ -4,11 +4,54 @@ import Title from './Components/Title';
 import Count from './Components/Count';
 import CGUCheckbox  from './Components/CGUCheckbox';
 import NavBar  from './Components/Nav/NavBar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate  } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { check } from './redux/auth/authAction'
+import { getSubstring } from './helpers/helpers'
+import axios from './api/axios';
+import { userInfo } from './redux/user/userAction'
+// import { checkAuthentication } from './helpers/helpers'
+
 
 
 
 function App() {
+
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // S'il n'y a rien dans le local storage, je redirige sur la page de connexion
+  // if (!localStorage.getItem('user')) {
+  //     navigate('/login')
+  // } 
+
+  const user = useSelector((state) => state.user.user);
+
+  console.log('user', user)
+
+  // Check auth
+  useEffect(() => {
+    
+    // checkAuthentication()
+  
+      if (!user) {
+
+        dispatch(userInfo()).then((result) => {
+          console.log("result", result)
+          if (result.payload) {
+              navigate('/')
+          } else {
+            navigate('/login')
+          }
+      })
+      
+    }
+
+    
+  }, [])
+
+
 
   const title = "Bonjour les gens, comment allez-vous"
 

@@ -27,10 +27,14 @@ export default function Register() {
             firstname: firstname,
             lastname: lastname,  
         };
-
-        axios.post(`/register`, JSON.stringify(user))
+        // JSON.stringify(user) séréalisation en Symfony
+        // Pas besoin en Laravel
+        axios.post(`http://localhost:8001/api/register`, user)
+        
             .then(res => {
+                console.log("kkdkdkffdk", res)
                 if (res.data) {
+                    console.log(res.data)
                     return navigate("/login")
                 }
                 

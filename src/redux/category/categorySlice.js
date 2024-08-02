@@ -3,15 +3,13 @@ import axiosBaseURL from '../../api/axios';
 // import { jwtDecode } from "jwt-decode";
 
 
-export const getUser = createAsyncThunk(
-    'user/getUser',
+export const getCategory = createAsyncThunk(
+    'category/getCategory',
     async() => {
-        const request = await axiosBaseURL.get(`user`, {
+        const request = await axiosBaseURL.get(`categories`, {
             withCredentials: true,
         });
         const response = await request.data;
-
-        localStorage.setItem('user', JSON.stringify(response))
         
         return response;
     }
@@ -20,30 +18,30 @@ export const getUser = createAsyncThunk(
 
 const initialState = {
     loading: false,
-    user:JSON.parse(localStorage.getItem('user')),
+    category: null,
     error: null
 };
 
-export const userSlice = createSlice({
-    name: "user",
+export const categorySlice = createSlice({
+    name: "category",
     initialState,
 
     extraReducers:(builder) => {
         builder
-        .addCase(getUser.pending,(state) => {
+        .addCase(getCategory.pending,(state) => {
             state.loading = true;
-            state.user = null;
+            state.category = null;
             state.error = null;
         })
-        .addCase(getUser.fulfilled,(state,action) =>{
+        .addCase(getCategory.fulfilled,(state,action) =>{
             state.loading = false;
-            state.user = action.payload;
+            state.category = action.payload;
             state.error = null;
         })
-        .addCase(getUser.rejected,(state,action) =>{
+        .addCase(getCategory.rejected,(state,action) =>{
             state.loading = false;
-            state.user = null;
-            console.log(action.error.message)
+            state.category = null;
+
             if (action.error.message == 'Request failed with status code 401') {
                 state.error = 'Access Denied! Invalid Credentials';
             } else {

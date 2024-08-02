@@ -1,14 +1,22 @@
 import NavBar  from '../../Components/Nav/NavBar';
-import products from '../../data';
+// import products from '../../data';
 import Category from '../../Components/Product/Category';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Products from '../../Components/Product/Products'
 import Filter from '../../Components/Product/Filter'
+import {Link } from "react-router-dom";
+import { useNavigate  } from "react-router-dom";
+import BtnLink  from '../../Components/Buttons/BtnLink';
+import { productList } from '../../redux/product/productAction'
+import { useDispatch, useSelector } from "react-redux";
 
 
 
 
 export default function Index() {
+
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [isChecked, setIsChecked] = useState(false);
 
@@ -16,76 +24,57 @@ export default function Index() {
 
   const [price, setPrice] = useState(0);
 
+  // const [products, setProducts] = useState([]);
 
-  const visibleProducts = products.filter(product => {
-    if (isChecked && !product.stocked) {
-        return false
-    }
+  const visibleProducts = useSelector((state) => state.product.product);
+  console.log("visibleProducts", visibleProducts)
 
-    if (search && !product.name.toLowerCase().includes(search.toLowerCase())) {
-        return false
-    }
+  // const visibleProducts = products.filter(product => {
+  //   if (isChecked && !product.stocked) {
+  //       return false
+  //   }
 
-    if (price != 0 && !(parseInt(product.price.substring(1)) <= price)) {
-      return false
-    }
+  //   if (search && !product.name.toLowerCase().includes(search.toLowerCase())) {
+  //       return false
+  //   }
 
-    return true
+  //   if (price != 0 && !(parseInt(product.price.substring(1)) <= price)) {
+  //     return false
+  //   }
 
-  })
+  //   return true
 
-  // const [newProducts, setNewProducts] = useState(products);
-
-  // const onlyStockedProduct = (checked) => {
-
-  //     if (checked) {
-  //         const newItem = newProducts.filter((newProduct) => {
-  //           return newProduct.stocked === true; 
-          
-  //         });
-      
-  //         return setNewProducts(newItem);
-        
-  //     } else {
-  //       return setNewProducts(products);
-  //     }
-  // };
-
-  // const filterBySearch = (elt) => {
-
-  //     const filteredProducts = products.filter((product) =>
-  //       product.name.toLowerCase().includes(elt.toLowerCase())
-  //     );
-
-  //     setNewProducts(filteredProducts);
-        
-  // }
-
-  // useEffect(() => {
-
-  //   onlyStockedProduct(isChecked)
-
-  //   // filterBySearch(search)
-
-  // }, [isChecked])
-
+  // })
   
-  // useEffect(() => {
 
-  //   // onlyStockedProduct(isChecked)
+  // console.log('products', products)
 
-  //   filterBySearch(search)
+    // Check auth
+    useEffect(() => {
+  
+        dispatch(productList()).then((result) => {
+            console.log("result", result.payload)
+            // if (result.payload) {
+            //     navigate('/')
+            // } else {
+            //   navigate('/login')
+            // }
+        })
+      
+    }, [dispatch])
 
-  // }, [search])
 
 
     return (
       <>
       <NavBar />
         <div className="container"  style={{ marginTop: '90px' }}>
-
+          <div className=''>
             <Filter checked={isChecked} onCheck={setIsChecked} search={search} onInputSearch={setSearch} price={price} onInputPrice={setPrice}/>
-
+            <div className='mb-3'>
+              <BtnLink className="btn-primary" link="/product/create" label="Ajouter un produit"/>
+            </div> 
+          </div>
             <table className="table table-bordered table-striped">
                 <thead>
                     <tr className='table-primary'>
@@ -95,15 +84,22 @@ export default function Index() {
                 </thead>
                 
                 <tbody>
-                    <Category category="Fruits" />
-                    <Products products={visibleProducts} category="Fruits"/>
+                    <Category category="fruits" />
+                    { 
+                      visibleProducts && 
+                      <Products products={visibleProducts} category="fruits"/>
+                    
+                    }
                 </tbody>
                 <tbody>
-                      <Category category="Végétables" />
-                      <Products products={visibleProducts} category="Vegetables"/>
+                      <Category category="vegetables" />
+                      {
+                        visibleProducts && 
+                        <Products products={visibleProducts} category="vegetables"/>
+                      }
                 </tbody>
-               
             </table>
+
         </div>
         </>
     );
