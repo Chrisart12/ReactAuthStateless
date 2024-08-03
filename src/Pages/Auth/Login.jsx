@@ -3,18 +3,18 @@ import { useState, useEffect } from "react";
 import Input from "../../Components/Forms/Input";
 import InputLabel from "../../Components/Forms/InputLabel";
 import { useNavigate  } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from '../../redux/auth/authAction'
 import { userInfo } from '../../redux/user/userAction'
-import axiosBaseURL from '../../api/axios';
+
+// import axiosBaseURL from '../../api/axios';
 
 // import axios from 'axios';
 
-
-
 export default function Login() {
 
-   
-
+    const user = useSelector((state) => state.user.user);
+    console.log("user 1", user)
     const dispatch = useDispatch()
 
     let navigate = useNavigate();
@@ -33,35 +33,35 @@ export default function Login() {
 
         };
 
-       
-        // JSON.stringify(user)
-        axiosBaseURL.post(`login`, JSON.stringify(user), {
-            headers: {
-                'Content-type': 'application/json',
-            },
-            // Permet de recevoir les cookies envoyé par le serveur
-            withCredentials: true,
-            
-        }).then(res => {
-                // Si l'authentification a réussi on fait appel à la fonction dispatch getUser
-                if (res.data) {
+        // On appelle la méthod login qui permet à l'utilisateur de se connecter
+        dispatch(login(user))
+        .then((result) => {
+            console.log("result", result.payload.access_token)
 
+            dispatch(userInfo(result.payload.access_token))
+            .then(response => {
+                console.log("response", response.payload)
+
+                if (response.payload) {
                     navigate('/')
-
-                    // dispatch(userInfo()).then((result) => {
-                    //     console.log("result", result)
-                    //     if (result.payload) {
-                    //         console.log('eeeeeee')
-                    //         navigate('/')
-                    //     }
-                    // })
+                } else {
+                    navigate('/login')
                 }
-                
-        }).catch(error => { 
-                console.log("eeeeeeeeeeeeeee", error);
+            })
+            
         })
 
     }
+
+
+    // Check auth
+    useEffect(() => {
+  
+        if (user) {
+            navigate('/')
+        }
+    }, [])
+
 
    
     return (

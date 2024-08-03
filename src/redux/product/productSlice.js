@@ -6,9 +6,10 @@ import products from '../../data';
 
 export const geProduct = createAsyncThunk(
     'product/geProduct',
-    async() => {
+    async(jwtoken) => {
+        const headers = { 'Authorization': `Bearer ${jwtoken}` }; 
         const request = await axiosBaseURL.get(`products`, {
-            withCredentials: true,
+            headers,
         });
         const response = await request.data;
         

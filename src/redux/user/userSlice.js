@@ -5,10 +5,9 @@ import axiosBaseURL from '../../api/axios';
 
 export const getUser = createAsyncThunk(
     'user/getUser',
-    async() => {
-        const request = await axiosBaseURL.get(`user`, {
-            withCredentials: true,
-        });
+    async(jwtoken) => {
+        const headers = { 'Authorization': `Bearer ${jwtoken}` }; 
+        const request = await axiosBaseURL.post(`me`, '', { headers });
         const response = await request.data;
 
         localStorage.setItem('user', JSON.stringify(response))
@@ -18,9 +17,10 @@ export const getUser = createAsyncThunk(
 )
 
 
+
 const initialState = {
     loading: false,
-    user:JSON.parse(localStorage.getItem('user')),
+    user: JSON.parse(localStorage.getItem('user')),
     error: null
 };
 

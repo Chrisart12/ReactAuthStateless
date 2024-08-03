@@ -4,15 +4,32 @@ import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 
 
-export const checkAuth = createAsyncThunk(
-    'auth/checkAuth',
+// export const getToken = createAsyncThunk(
+//     'auth/getToken',
     
-    async(jwtoken) => {
+//     async(jwtoken) => {
 
-        const headers = { 'Authorization': `Bearer ${jwtoken}`  }; 
-        const request = await axios.post(`https://localhost:8000/api/dashboard`, '', { headers })
+//         const headers = { 'Authorization': `Bearer ${jwtoken}`  }; 
+//         const request = await axios.post(`https://localhost:8000/api/dashboard`, '', { headers })
+        
+//         const response = await request.data;
+        
+//         return response;
+//     }
+
+// )
+
+
+export const getToken = createAsyncThunk(
+    'auth/getToken',
+    
+    async(user) => {
+        const request = await axios.post(`http://localhost:8000/api/auth/login`, user)
         
         const response = await request.data;
+    
+        // On fait l'enregistrement dans le localstorage
+        localStorage.setItem('token', JSON.stringify(response))
         
         return response;
     }
@@ -20,29 +37,31 @@ export const checkAuth = createAsyncThunk(
 )
 
 
-// const initialState = {
-//     test: null,
-// };
+const initialState = {
+    loading: false,
+    auth: JSON.parse(localStorage.getItem('token')),
+    error: null
+};
 
-export const userSlice = createSlice({
+export const authSlice = createSlice({
     name: "auth",
-    // initialState,
+    initialState,
 
     extraReducers:(builder) => {
         builder
-        .addCase(checkAuth.pending,(state) => {
+        .addCase(getToken.pending,(state) => {
             state.loading = true;
-            state.user = null;
+            state.auth = null;
             state.error = null;
         })
-        .addCase(checkAuth.fulfilled,(state,action) => {
+        .addCase(getToken.fulfilled,(state,action) => {
             state.loading = false;
-            state.user = action.payload;
+            state.auth = action.payload;
             state.error = null;
         })
-        .addCase(checkAuth.rejected,(state,action) => {
+        .addCase(getToken.rejected,(state,action) => {
             state.loading = false;
-            state.user = null;
+            state.auth = null;
             if (action.error.message == 'Request failed with status code 401') {
                 state.error = 'Access Denied! Invalid Credentials';
             } else {

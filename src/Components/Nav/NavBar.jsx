@@ -1,9 +1,43 @@
-import {Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import {  useSelector } from "react-redux";
+import axiosBaseURL from '../../api/axios';
+import { useNavigate  } from "react-router-dom";
+import Logout from "./Logout"
+import Login from "./Login"
+import Register from "./Register"
 // NavLInk contrairemetent à Link permet de savoir si la page est chargée ou pas afin de rajouter active au menu
 
 export default function NavBar() {
+
+    const user = useSelector((state) => state.user.user);
+    // const token = useSelector((state) => state.auth.auth);
+    // let navigate = useNavigate();
+
+    // const handleSubmit = (event) => {
+    //     event.preventDefault();
+
+    //     const headers = { 'Authorization': `Bearer ${token.access_token}`  };
+    //     axiosBaseURL.post(`logout`, '', {headers})
+        
+    //         .then(res => {
+    //             if (res.data) {
+    //                 localStorage.clear();
+    //                 navigate("/login")
+    //                 // navigate(0) permet de recharger la page
+    //                 navigate(0)
+    //             }
+                
+    //         }).catch(error => {
+    //             console.log("eeeeeeeeeeeeeee", error);
+    //         })
+        
+
+    // }
+
+
+
     return (
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav className="navbar navbar-expand-lg navbar-dark fixed-top bg-dark"> 
                 <a className="navbar-brand" href="/home">
                     Navbar
                 </a>
@@ -23,7 +57,7 @@ export default function NavBar() {
                     className="collapse navbar-collapse"
                     id="navbarSupportedContent"
                 >
-                    <ul className="navbar-nav mr-auto">
+                    <ul className="navbar-nav me-auto mb-2 mb-md-0">
                         <li className="nav-item ">
                             <NavLink className="nav-link" to="/">
                                 Home
@@ -84,19 +118,56 @@ export default function NavBar() {
                                 </a>
                             </div>
                         </li>
+                    </ul>
 
-                        <li className="nav-item">
-                            <NavLink className="nav-link" to="/login">
-                            Login
-                            </NavLink>
-                        </li>
+                    <ul
+                    className="navbar-nav">
+                        {
+                            user ?
+                                // <li className="nav-item dropdown">
+                                //     <a
+                                //         className="nav-link dropdown-toggle"
+                                //         href="#"
+                                //         id="navbarDropdown"
+                                //         role="button"
+                                //         data-bs-toggle="dropdown"
+                                //         aria-haspopup="true"
+                                //         aria-expanded="false"
+                                //     >
+                                //         Issa
+                                //     </a>
+                                //     <div
+                                //         className="dropdown-menu "
+                                //         aria-labelledby="navbarDropdown"
+                                //     >
+                                //          <form onSubmit={handleSubmit}>
+                                //            <input type="submit" value="Se déconnecter" /> 
+                                //          </form>
+                                       
 
-                        <li className="nav-item">
-                            <NavLink className="nav-link" to="/register">
-                            Register
-                            </NavLink>
-                        </li>
-                       
+                                //     </div>
+                                // </li>
+                                <Logout />
+                            :
+
+                            <>
+                                {/* <li className="nav-item">
+                                    <NavLink className="nav-link" to="/login">
+                                        Login
+                                    </NavLink>
+                                </li>
+        
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/register">
+                                    Register
+                                    </NavLink>
+                                </li> */}
+                                <Login />
+                                <Register />
+                            </>
+                           
+                        }
+            
                     </ul>
                     {/* <form className="form-inline my-2 my-lg-0">
                         <input

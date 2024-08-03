@@ -1,4 +1,4 @@
-import { checkAuth } from './authSlice'
+import { getToken } from './authSlice'
 
 
-export const check = checkAuth;
+export const login = getToken;

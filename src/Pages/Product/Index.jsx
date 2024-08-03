@@ -17,6 +17,7 @@ export default function Index() {
 
   let navigate = useNavigate();
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.auth);
 
   const [isChecked, setIsChecked] = useState(false);
 
@@ -52,7 +53,7 @@ export default function Index() {
     // Check auth
     useEffect(() => {
   
-        dispatch(productList()).then((result) => {
+        dispatch(productList(token.access_token)).then((result) => {
             console.log("result", result.payload)
             // if (result.payload) {
             //     navigate('/')
@@ -61,7 +62,7 @@ export default function Index() {
             // }
         })
       
-    }, [dispatch])
+    }, [])
 
 
 

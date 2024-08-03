@@ -7,7 +7,7 @@ import NavBar  from './Components/Nav/NavBar';
 import { useState, useEffect } from 'react';
 import { useNavigate  } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { check } from './redux/auth/authAction'
+// import { check } from './redux/auth/authAction'
 import { getSubstring } from './helpers/helpers'
 import axios from './api/axios';
 import { userInfo } from './redux/user/userAction'

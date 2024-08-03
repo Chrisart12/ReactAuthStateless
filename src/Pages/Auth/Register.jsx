@@ -3,11 +3,14 @@ import { useState, useEffect } from "react";
 import Input from "../../Components/Forms/Input";
 import InputLabel from "../../Components/Forms/InputLabel";
 import {Link, useNavigate  } from "react-router-dom";
-import axios from 'axios';
-
+import {  useSelector } from "react-redux";
+// import axios from 'axios';
+import axiosBaseURL from '../../api/axios';
 
 
 export default function Register() {
+
+    const user = useSelector((state) => state.user.user);
 
     let navigate = useNavigate();
    
@@ -16,20 +19,23 @@ export default function Register() {
     const [lastname, setLastname] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [password_confirmation, setPasswordConfirmation] = useState('')
 
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         const user = {
+            firstname: firstname,
+            lastname: lastname, 
             email: email,
             password: password,
-            firstname: firstname,
-            lastname: lastname,  
+            password_confirmation: password_confirmation
+
         };
         // JSON.stringify(user) séréalisation en Symfony
         // Pas besoin en Laravel
-        axios.post(`http://localhost:8001/api/register`, user)
+        axiosBaseURL.post(`register`, user)
         
             .then(res => {
                 console.log("kkdkdkffdk", res)
@@ -43,6 +49,14 @@ export default function Register() {
             })
 
     }
+
+    // Check auth
+    useEffect(() => {
+  
+        if (user) {
+            navigate('/')
+        }
+    }, [])
 
 
 
@@ -141,26 +155,24 @@ export default function Register() {
                                             />
                                         </div>
 
-                                            {/* <div className="form-check d-flex justify-content-center mb-5">
-                                                <input
-                                                    className="form-check-input me-2"
-                                                    type="checkbox"
-                                                    value=""
-                                                    id="form2Example3cg"
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="form2Example3g"
-                                                >
-                                                    I agree all statements in{" "}
-                                                    <a
-                                                        href="#!"
-                                                        className="text-body"
-                                                    >
-                                                        <u>Terms of service</u>
-                                                    </a>
-                                                </label>
-                                            </div> */}
+                                        <div className="mb-4">
+                                            <InputLabel
+                                                htmlFor="password_confirmation"
+                                                className="form-label"
+                                                label="Confirmer le mot de passe"
+                                            />
+                                            <Input
+                                                className="form-control form-control-lg"
+                                                type="password"
+                                                name="password_confirmation"
+                                                id="password_confirmation"
+                                                placeholder="Confirmer le mot de passe" 
+                                                value={password_confirmation}
+                                                // onChange={setTitle}
+                                                onChange={(e) => setPasswordConfirmation(e.target.value)}
+                                                
+                                            />
+                                        </div>
 
                                             <div className="d-flex justify-content-center">
                                                 <button
